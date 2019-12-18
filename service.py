@@ -1,4 +1,4 @@
-import os, sys, asyncio, array
+import os, sys, asyncio
 from flask import Flask, escape, request
 from telethon import TelegramClient, functions
 from telethon.sessions import MemorySession
@@ -12,7 +12,8 @@ tg_app_id = os.environ['APP_ID']
 messages_limit = 50
 
 if tg_api_hash is None or tg_app_id is None:
-    sys.exit()
+    print("please specify API_HASH and APP_ID")
+    sys.exit(-1)
 
 
 def json(elems):
@@ -32,7 +33,7 @@ async def get_members(token, chat_id):
 
 async def get_messages(token, chat_id, to_message):
     from_message = to_message - messages_limit if to_message > messages_limit else 0
-    ids = list(array.array('i',(i for i in range(from_message,to_message))))
+    ids = [i for i in range(from_message,to_message)]
 
     c = await client(token)
     res = await c(functions.channels.GetMessagesRequest(
