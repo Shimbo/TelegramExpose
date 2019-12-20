@@ -5,6 +5,8 @@ pipeline {
     environment {
         API_HASH=credentials('TELEGRAM_EXPOSE_API_HASH')
         APP_ID=credentials('TELEGRAM_EXPOSE_APP_ID')
+        AWS_ACCESS_KEY_ID=credentials('AWS_ACCESS_KEY_ID')
+        AWS_SECRET_ACCESS_KEY=credentials('AWS_SECRET_ACCESS_KEY')
     }
 
     stages {
