@@ -1,0 +1,30 @@
+pipeline {
+
+    agent none
+
+    environment {
+        API_HASH=credentials('TELEGRAM_EXPOSE_API_HASH')
+        APP_ID=credentials('TELEGRAM_EXPOSE_APP_ID')
+    }
+
+    stages {
+        stage('TelegramExpose Build') {
+          agent { label 'staging' }
+          steps {
+              sh '$(aws ecr get-login --no-include-email --region us-east-1)'
+              sh 'docker-compose build; \
+                  docker-compose push'
+          }
+        }
+
+        stage('Deploy TelegramExpose') {
+            agent { label 'prod' }
+
+            steps {
+                sh '$(aws ecr get-login --no-include-email --region us-east-1)'
+                sh 'docker-compose pull; \
+                    docker-compose up -d --force-recreate'
+            }
+        }
+    }
+}
