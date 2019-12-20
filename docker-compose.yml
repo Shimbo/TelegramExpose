@@ -1,0 +1,16 @@
+version: "3.6"
+
+# Could be runned locally with:
+# godotenv -f .env.local docker-compose up
+
+services:
+  tg-expose:
+    build:
+      context: .
+    image: "${ECR_HOST}/tg-expose:${TG_EXPOSE_IMAGE_TAG}"
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      - API_HASH
+      - APP_ID

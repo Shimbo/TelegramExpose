@@ -1,0 +1,34 @@
+pipeline {
+
+    agent none
+
+    environment {
+        API_HASH=credentials('TELEGRAM_EXPOSE_API_HASH')
+        APP_ID=credentials('TELEGRAM_EXPOSE_APP_ID')
+        ECR_HOST="785837454585.dkr.ecr.us-east-1.amazonaws.com"
+        TG_EXPOSE_IMAGE_TAG="latest"
+        AWS_ACCESS_KEY_ID=credentials('AWS_ACCESS_KEY_ID')
+        AWS_SECRET_ACCESS_KEY=credentials('AWS_SECRET_ACCESS_KEY')
+    }
+
+    stages {
+        stage('TelegramExpose Build') {
+          agent { label 'staging' }
+          steps {
+              sh '$(aws ecr get-login --no-include-email --region us-east-1)'
+              sh 'docker-compose build; \
+                  docker-compose push'
+          }
+        }
+
+        stage('Deploy TelegramExpose') {
+            agent { label 'prod' }
+
+            steps {
+                sh '$(aws ecr get-login --no-include-email --region us-east-1)'
+                sh 'docker-compose pull; \
+                    docker-compose up -d --force-recreate'
+            }
+        }
+    }
+}
