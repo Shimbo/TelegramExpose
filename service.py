@@ -9,7 +9,7 @@ app = Flask(__name__)
 
 tg_api_hash = os.environ['API_HASH']
 tg_app_id = os.environ['APP_ID']
-messages_limit = 50
+messages_limit = 30
 
 if tg_api_hash is None or tg_app_id is None:
     print("please specify API_HASH and APP_ID")
