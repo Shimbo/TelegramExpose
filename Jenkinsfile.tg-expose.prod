@@ -21,8 +21,17 @@ pipeline {
           }
         }
 
-        stage('Deploy TelegramExpose') {
+        stage('Deploy TelegramExpose to prod1') {
             agent { label 'prod' }
+
+            steps {
+                sh '$(aws ecr get-login --no-include-email --region us-east-1)'
+                sh 'docker-compose pull; \
+                    docker-compose up -d --force-recreate'
+            }
+        }
+        stage('Deploy TelegramExpose to prod2') {
+            agent { label 'prod2' }
 
             steps {
                 sh '$(aws ecr get-login --no-include-email --region us-east-1)'
